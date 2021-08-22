@@ -1,0 +1,46 @@
+import officeApi
+import office
+from office.models import (
+    Office, Room, Place, UserPlace, User
+)
+from django.db.models import Count, F, Q, Value, Sum
+from datetime import datetime
+from importlib import reload
+import try_sql
+
+of = Office.objects.all()
+pl = Place.objects.all()
+room = Room.objects.all()
+
+# занятые места в определенный день
+upl1 = UserPlace.objects.filter(Q(start_date__date=datetime.date(2021, 8, 20)),Q(end_date__date=datetime.date(2021, 8, 20))
+    ).values('place')
+
+# все места, которые заняты в определенный день, их id
+pl = Place.objects.filter(id__in=upl1).values('id')
+
+
+# все места, которые свободны в определенный день, их id
+plfree = Place.objects.exclude(id__in=pl)
+'2021-08-19T14:00:00Z'
+
+start = datetime.datetime.strptime('2021-08-22T09:00:00Z', '%Y-%m-%dT%H:%M:%SZ')
+end = datetime.datetime.strptime('2021-08-22T10:00:00Z', '%Y-%m-%dT%H:%M:%SZ')
+
+up_definite = UserPlace.objects.filter(
+                Q(start_date__date=start.date()),
+                Q(end_date__date=end.date()),
+                Q(start_date__time__lte=start.time()),
+                Q(end_date__time__gte=start.time()),
+                Q(start_date__time__lte=end.time()),
+                Q(end_date__time__gte=end.time(),
+                  )
+            ).values('place')
+
+up_definite = UserPlace.objects.filter(
+                Q(start_date__time<start.date()),
+                Q(end_date__time>start.date()),
+                Q(start_date__time_lte=end.date()),
+                Q(end_date__time_gte=end.date(),
+                  )
+            ).values('place')
