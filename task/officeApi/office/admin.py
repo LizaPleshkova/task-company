@@ -18,7 +18,7 @@ class PlaceForm(forms.ModelForm):
     def clean(self):
         up_count = Place.objects.filter(room=int(self.data.get('room'))).count()
         room_place_count = Room.objects.get(id=int(self.data.get('room'))).counts_seats
-        if up_count <= room_place_count:
+        if up_count > room_place_count:
             raise forms.ValidationError("there is a limited number of seats in the room")
 
 
