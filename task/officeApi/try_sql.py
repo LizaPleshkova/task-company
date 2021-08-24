@@ -59,18 +59,43 @@ def ex1(start, end):
         print(i)
         print(i.start_date.time(), start.time(), end.time())
         print(i.end_date.time(), start.time(), end.time())
-        if not ((i.start_date.time() > start.time() or i.start_date.time() >= start.time())
-                and (i.start_date.time() < end.time() or i.start_date.time() <= end.time()))\
-                and not (
-                (i.end_date.time() > start.time() or i.end_date.time() >= start.time())
-                and (i.end_date.time() < end.time() or i.end_date.time() <= end.time())
-                ):
-            print(" ------ OKS ----------- ")
-        # # когда или start_date или end_date входят в промежуток [start,end]
-        # if i.start_date.time() != start.time() and i.end_date.time() != start.time():
-        #     print(1)
-        #     if not i.start_date.time() > start.time() and i.start_date.time() < end.time():
-        #         print('first if')
-        #         if not i.end_date.time() > start.time() and i.end_date.time() < end.time():
-        #             print('second if')
-        #     print('the place is suitable! OK! ', i, end='\n----\n')
+        # if not (
+        #         (
+        #                 i.start_date.time() > start.time() or i.start_date.time() >= start.time()
+        #         ) and
+        #         (
+        #                 i.start_date.time() < end.time() or i.start_date.time() <= end.time()
+        #         )
+        # ) \
+        #         and not (
+        #         (
+        #                 i.end_date.time() > start.time() or i.end_date.time() >= start.time()
+        #         ) and
+        #         (
+        #                 i.end_date.time() < end.time() or i.end_date.time() <= end.time()
+        #         )
+        # ):
+
+
+        # и нначало, и конец не внутри промежутка
+        if not (start.time() >= i.start_date.time() and end.time() <= i.end_date.time()):
+            print(1)
+            # начало вне промежутка
+            if not (start.time() <= i.start_date.time() and start.time() <= i.end_date.time()
+                    and end.time() >= i.start_date.time() and end.time() <= i.end_date.time()):
+                print(2)
+                print(" ------ OKS ----------- ")
+            # конец вне промежутка
+            elif not (start.time() >= i.start_date.time() and start.time() <= i.end_date.time()
+                  and end.time() > i.end_date.time()):
+                print(3)
+                print(" ------ OKS ----------- ")
+
+# # когда или start_date или end_date входят в промежуток [start,end]
+# if i.start_date.time() != start.time() and i.end_date.time() != start.time():
+#     print(1)
+#     if not i.start_date.time() > start.time() and i.start_date.time() < end.time():
+#         print('first if')
+#         if not i.end_date.time() > start.time() and i.end_date.time() < end.time():
+#             print('second if')
+#     print('the place is suitable! OK! ', i, end='\n----\n')
