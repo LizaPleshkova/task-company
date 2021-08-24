@@ -18,7 +18,7 @@ class Room(models.Model):
     counts_seats = models.IntegerField("Numbers of seats", null=True, blank=True)
 
     def __str__(self):
-        return f'{self.id} - {self.number_room} - {self.office} - {self.counts_seats}'
+        return f'{self.id} - {self.number_room} - [{self.office.id} - {self.office.name}] - {self.counts_seats}'
 
 
 class Place(models.Model):
@@ -31,7 +31,7 @@ class Place(models.Model):
     # status = models.CharField("Place's status", max_length=50, choices=PlaceChoice.choices(), null=True, blank=True)
 
     def __str__(self):
-        return f'{self.id} - {self.number_place} - {self.room}'
+        return f'{self.id} - {self.number_place} - [{self.room.id}- {self.room.number_room}]'
         # return f'{self.id} - {self.room}'
 
 
