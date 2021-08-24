@@ -1,4 +1,6 @@
 from datetime import datetime
+
+from django.contrib.postgres.aggregates import ArrayAgg
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from rest_framework import viewsets, permissions, status
@@ -10,22 +12,8 @@ import datetime
 from .models import (
     Office, Room, Place, UserPlace, User
 )
-from .serializers import PlaceListSerializer, RoomSerializer, OfficeListSerializer, UserPlaceSerializer, \
-    UserPlaceListSerializer
-
-
-class UserPlaceView(ListModelMixin, RetrieveModelMixin, CreateModelMixin, viewsets.GenericViewSet):
-    permission_classes = (IsAuthenticated,)
-    serializer_classes_by_action = {
-        'retrieve': UserPlaceListSerializer,
-        'list': UserPlaceListSerializer,
-    }
-
-    def get_serializer_class(self):
-        return self.serializer_classes_by_action.get(self.action, UserPlaceSerializer)
-
-    def get_queryset(self, *args, **kwargs):
-        return UserPlace.objects.filter(user=self.request.user)
+from .serializers import PlaceListSerializer, RoomSerializer, OfficeListSerializer, BookingPlaceSerializer, \
+    UserPlaceListSerializer, UserAllPlacesSerializer
 
 
 class PlaceView(ListModelMixin, RetrieveModelMixin, CreateModelMixin, viewsets.GenericViewSet):
@@ -55,17 +43,24 @@ class PlaceView(ListModelMixin, RetrieveModelMixin, CreateModelMixin, viewsets.G
         serializer = PlaceListSerializer(place_free, many=True)
         return Response(serializer.data)
 
+    @action(methods=['get'], detail=False, url_path='user-places')
+    def user_places(self, request):
+        user_places = User.objects.annotate(places=ArrayAgg('user__place', distinct=True))
+        serializer = UserAllPlacesSerializer(user_places, many=True)
+        return Response(serializer.data)
+
 
 class BookingPlaceView(ListModelMixin, RetrieveModelMixin, CreateModelMixin, viewsets.GenericViewSet):
     permission_classes = (IsAuthenticated,)
-    serializer_class = UserPlaceSerializer
 
     serializer_classes_by_action = {
-        'create': UserPlaceSerializer,
+        'create': BookingPlaceSerializer,
+        'retrieve': UserPlaceListSerializer,
+        'list': UserPlaceListSerializer,
     }
 
     def get_serializer_class(self):
-        return self.serializer_classes_by_action.get(self.action, UserPlaceSerializer)
+        return self.serializer_classes_by_action.get(self.action, UserPlaceListSerializer)
 
     def get_queryset(self, *args, **kwargs):
         return UserPlace.objects.filter(user=self.request.user)
@@ -96,3 +91,5 @@ class OfficeView(ListModelMixin, RetrieveModelMixin, CreateModelMixin, viewsets.
 
     def get_queryset(self, *args, **kwargs):
         return Office.objects.all()
+
+

@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+from managers import PlaceTodayManager
+
 
 class Office(models.Model):
     name = models.CharField("Name of office", max_length=50, null=True, blank=True)
@@ -36,6 +38,8 @@ class Place(models.Model):
 
 
 class UserPlace(models.Model):
+    # todays_place = PlaceTodayManager()
+    objects = models.Manager()
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='user')
     place = models.ForeignKey(Place, on_delete=models.SET_NULL, null=True, blank=True, related_name='place')
     start_date = models.DateTimeField(null=True, blank=True)
