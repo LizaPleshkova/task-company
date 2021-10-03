@@ -6,8 +6,6 @@ class Office(models.Model):
     name = models.CharField("Name of office", max_length=50, null=True, blank=True)
     address = models.CharField("Address of office", max_length=255, null=True, blank=True)
 
-    # counts_rooms = models.IntegerField("Numbers of seats", null=True, blank=True, related_name='office_rooms')
-
     def __str__(self):
         return f'{self.id} - {self.name}'
 
@@ -22,17 +20,11 @@ class Room(models.Model):
 
 
 class Place(models.Model):
-    '''
-    наверное ткт еще долженбыть метод для сохранения: тип если количество мест в определенной комнате уже все, не добавлять
-    '''
     number_place = models.IntegerField(null=True, blank=True)
     room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True, blank=True, related_name='room_places')
 
-    # status = models.CharField("Place's status", max_length=50, choices=PlaceChoice.choices(), null=True, blank=True)
-
     def __str__(self):
         return f'{self.id} - {self.number_place} - {self.room}'
-        # return f'{self.id} - {self.room}'
 
 
 class UserPlace(models.Model):

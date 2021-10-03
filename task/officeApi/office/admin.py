@@ -1,12 +1,8 @@
 import datetime
-
-import form as form
 from django.contrib import admin
-from django.forms import ModelForm
 from django import forms
-
 from .models import (
-    Office, Room, Place, UserPlace, User
+    Office, Room, Place, UserPlace
 )
 
 
@@ -30,8 +26,6 @@ class UserPlaceForm(forms.ModelForm):
     def clean(self):
         start_data = self.cleaned_data['start_date']
         end_data = self.cleaned_data['end_date']
-        print(start_data.time(),
-              end_data.time())
         if start_data.date() < datetime.date.today() or end_data.date() < datetime.date.today():
             raise forms.ValidationError("the date for booking a seat is incorrect!")
         if start_data.time() < datetime.time(9) or end_data.time() > datetime.time(18):
