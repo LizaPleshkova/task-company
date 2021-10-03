@@ -10,7 +10,15 @@ from .models import (
 User = get_user_model()
 
 
-class UserPlaceSerializer(serializers.ModelSerializer):
+class UserAllPlacesSerializer(serializers.ModelSerializer):
+    places = serializers.ListField()
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'places']
+
+
+class BookingPlaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserPlace
         fields = '__all__'
@@ -37,7 +45,6 @@ class UserPlaceSerializer(serializers.ModelSerializer):
                         if i.start_date.time() != start.time() and i.end_date.time() != start.time():
                             raise serializers.ValidationError('This time is already taken', code='invalid')
             return data
-
         except UserPlace.DoesNotExist or Place.DoesNotExist:
             raise ObjectDoesNotExist('No UserPlace or Place matches the given query')
 

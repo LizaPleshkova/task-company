@@ -16,7 +16,7 @@ class Room(models.Model):
     counts_seats = models.IntegerField("Numbers of seats", null=True, blank=True)
 
     def __str__(self):
-        return f'{self.id} - {self.number_room} - {self.office} - {self.counts_seats}'
+        return f'{self.id} - {self.number_room} - [{self.office.id} - {self.office.name}] - {self.counts_seats}'
 
 
 class Place(models.Model):
@@ -28,6 +28,8 @@ class Place(models.Model):
 
 
 class UserPlace(models.Model):
+    # todays_place = PlaceTodayManager()
+    objects = models.Manager()
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='user')
     place = models.ForeignKey(Place, on_delete=models.SET_NULL, null=True, blank=True, related_name='place')
     start_date = models.DateTimeField(null=True, blank=True)

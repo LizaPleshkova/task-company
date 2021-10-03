@@ -7,6 +7,7 @@ from django.db.models import Count, F, Q, Value, Sum
 from datetime import datetime
 from importlib import reload
 import try_sql
+from django.contrib.postgres.aggregates import ArrayAgg
 
 of = Office.objects.all()
 pl = Place.objects.all()
